@@ -14,9 +14,9 @@ module.exports = class JSONFile {
     
     async createFileIfNotExists() {
         try {
-          await fs.access(this.path, fs.constants.F_OK);
+            await fs.access(this.path, fs.constants.F_OK);
         }catch(err) {
-          await this.write(this.jsonData || {});
+            await this.write(this.jsonData || {});
         }
     }
 
