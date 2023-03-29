@@ -1,42 +1,28 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 module.exports = class JSONFile {
-    constructor(filePath, defaultData = {}) {
-        this.filePath = filePath;
-        if(!fs.existsSync(filePath)) {
-            try {
-                fs.writeFileSync(filePath, JSON.stringify(defaultData, null, 2));
-            }catch(error) {
-                console.error(`Error creating file: ${filePath}\n`, error);
-            }
-        }
+    constructor(path, jsonData = null) {
+        this.path = path;
+        this.jsonData = jsonData;
+    
+        this.createFileIfNotExists().then(() => {
+            console.log(`JSON file '${this.path}' is ready to use`);
+        }).catch((err) => {
+            console.error(`Error creating JSON file '${this.path}': ${err}`);
+        });
     }
-
-    read() {
+    
+    async createFileIfNotExists() {
         try {
-            const data = fs.readFileSync(this.filePath);
-            return JSON.parse(data);
-        } catch (error) {
-            console.error(`Error reading file: ${this.filePath}\n`, error);
-            return null;
+          await fs.access(this.path, fs.constants.F_OK);
+        }catch(err) {
+          await this.write(this.jsonData || {});
         }
     }
 
-    write(data) {
-        try {
-            const jsonData = JSON.stringify(data, null, 2);
-            fs.writeFileSync(this.filePath, jsonData);
-        } catch (error) {
-            console.error(`Error writing file: ${this.filePath}\n`, error);
-        }
-    }
+    read = async () => JSON.parse(await fs.readFile(this.path, 'utf8'));
 
-    modify(jsonData) {
-        let existingData = this.read();
-        if (!existingData) {
-            existingData = {};
-        }
-        const combinedData = { ...existingData, ...jsonData };
-        this.write(combinedData);
-    }
+    write = async data => fs.writeFile(this.path, JSON.stringify(data, null, 2));
+
+    modify = async jsonData => this.write({ ...await this.read(), ...jsonData });
 }
