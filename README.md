@@ -1,5 +1,5 @@
 # JSONFile
-A Node.js JSON file reader, writer, and modifier.
+Asynchronous Node.js JSON file reader, writer, and modifier.
 
 ## Usage
 Initialize: <br>
