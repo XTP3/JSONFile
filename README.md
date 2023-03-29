@@ -3,21 +3,21 @@ A Node.js JSON file reader, writer, and modifier.
 
 ## Usage
 Initialize: <br>
-```const jsonFile = new JSONFile(filePath, initialData);```
+```const jsonFile = await new JSONFile(filePath, initialData);```
 
 Read: <br>
-```const data = jsonFile.read();```
+```const data = await jsonFile.read();```
 
 Write: <br>
-```jsonFile.write({foo: 'bar'});```
+```await jsonFile.write({foo: 'bar'});```
 
 Modify: <br>
-```jsonFile.modify({foo: 'car'});```
+```await jsonFile.modify({foo: 'car'});```
 
 Example: <br>
 
 ```
-const jsonFile = new JSONFile('./Data.json', {
+const jsonFile = await new JSONFile('./Data.json', {
   "name": "John",
   "age": 35,
   "email": "john@example.com",
@@ -30,6 +30,6 @@ const jsonFile = new JSONFile('./Data.json', {
   }
 });
 
-jsonFile.modify({name: "Alex", available: true});
-console.log(jsonFile.read());
+await jsonFile.modify({name: "Alex", available: true});
+console.log(await jsonFile.read());
 ```
